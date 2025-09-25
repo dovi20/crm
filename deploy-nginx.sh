@@ -43,9 +43,9 @@ fi
 # Create sites-available directory if it doesn't exist
 sudo mkdir -p "$NGINX_SITES_AVAILABLE"
 
-# Copy nginx configuration
-echo "Copying nginx configuration..."
-sudo cp "$APP_DIR/nginx.conf" "$NGINX_SITES_AVAILABLE/$DOMAIN"
+# Copy nginx configuration (HTTP version for initial setup)
+echo "Copying nginx configuration (HTTP version)..."
+sudo cp "$APP_DIR/nginx-http.conf" "$NGINX_SITES_AVAILABLE/$DOMAIN"
 
 # Remove old symlink if exists
 if [ -L "$NGINX_SITES_ENABLED/$DOMAIN" ]; then
@@ -82,11 +82,16 @@ echo "Checking nginx status..."
 sudo systemctl status nginx --no-pager -l
 
 success "Nginx configuration deployed successfully!"
-echo "Your application should now be available at: https://$DOMAIN"
+echo "Your application should now be available at: http://$DOMAIN"
+echo ""
+echo "Note: This is using HTTP configuration. For HTTPS/SSL setup:"
+echo "1. Install SSL certificate: sudo certbot --nginx -d $DOMAIN"
+echo "2. Switch to HTTPS config: sudo cp $APP_DIR/nginx.conf $NGINX_SITES_AVAILABLE/$DOMAIN"
+echo "3. Test and reload: sudo nginx -t && sudo systemctl reload nginx"
 
 # Optional: Enable firewall if ufw is available
 if command -v ufw &> /dev/null; then
     echo "Configuring firewall..."
-    sudo ufw allow 'Nginx Full'
-    success "Firewall configured for Nginx"
+    sudo ufw allow 'Nginx HTTP'
+    success "Firewall configured for Nginx HTTP"
 fi
