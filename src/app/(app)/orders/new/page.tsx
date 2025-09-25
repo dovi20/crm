@@ -14,7 +14,6 @@ import {
   Snackbar,
   Autocomplete,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { Add as AddIcon, Delete as DeleteIcon, Save as SaveIcon } from "@mui/icons-material";
 import rivhit from "@/lib/rivhit";
 
@@ -234,16 +233,16 @@ export default function NewOrderPage() {
           <Typography variant="h6" gutterBottom>
             פרטי לקוח
           </Typography>
-          <Grid container spacing={2}>
-            <Grid xs={12} md={6}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2 }}>
+            <Box>
               <Autocomplete
                 options={customers}
                 value={selectedCustomer}
                 onChange={(_, v) => setSelectedCustomer(v)}
                 renderInput={(params) => <TextField {...params} label="לקוח" placeholder="בחר לקוח..." />}
               />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
 
@@ -256,10 +255,10 @@ export default function NewOrderPage() {
             </Button>
           </Box>
           <Divider sx={{ mb: 2 }} />
-          <Grid container spacing={2}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '5fr 2fr 2fr 2fr 1fr' }, gap: 2, alignItems: 'start' }}>
             {items.map((it, idx) => (
               <React.Fragment key={idx}>
-                <Grid xs={12} md={5}>
+                <Box>
                   <Autocomplete
                     loading={itemsLoading}
                     options={itemOptions}
@@ -292,8 +291,8 @@ export default function NewOrderPage() {
                       helperText="ניתן להשאיר כפי שנבחר מהרשימה או להתאים ידנית"
                     />
                   </Box>
-                </Grid>
-                <Grid xs={6} md={2}>
+                </Box>
+                <Box>
                   <TextField
                     fullWidth
                     label="כמות"
@@ -302,8 +301,8 @@ export default function NewOrderPage() {
                     value={it.quantity}
                     onChange={(e) => setItem(idx, { quantity: Number(e.target.value) })}
                   />
-                </Grid>
-                <Grid xs={6} md={2}>
+                </Box>
+                <Box>
                   <TextField
                     fullWidth
                     label="מחיר ליח' (₪)"
@@ -312,23 +311,23 @@ export default function NewOrderPage() {
                     value={it.price_nis}
                     onChange={(e) => setItem(idx, { price_nis: Number(e.target.value) })}
                   />
-                </Grid>
-                <Grid xs={6} md={2}>
+                </Box>
+                <Box>
                   <TextField
                     fullWidth
                     label="סה״כ שורה (₪)"
                     value={(Number(it.quantity || 0) * Number(it.price_nis || 0)).toFixed(2)}
                     InputProps={{ readOnly: true }}
                   />
-                </Grid>
-                <Grid xs={12} md={1} display="flex" alignItems="center" justifyContent="flex-end">
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                   <IconButton color="error" onClick={() => removeItem(idx)} disabled={items.length === 1}>
                     <DeleteIcon />
                   </IconButton>
-                </Grid>
+                </Box>
               </React.Fragment>
             ))}
-          </Grid>
+          </Box>
 
           <Divider sx={{ my: 2 }} />
           <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>

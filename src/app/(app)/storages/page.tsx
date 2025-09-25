@@ -25,7 +25,7 @@ import {
   Chip,
   CircularProgress,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import { Box } from "@mui/material";
 import {
   UploadFile as UploadFileIcon,
   DeleteSweep as DeleteSweepIcon,
@@ -243,8 +243,8 @@ export default function StoragesPage() {
           <Typography variant="h6" gutterBottom>
             העברת מלאי בין מחסנים
           </Typography>
-          <Grid container spacing={2}>
-            <Grid xs={12} md={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '3fr 3fr 3fr 2fr 1fr' }, gap: 2, alignItems: 'start' }}>
+            <Box>
               <TextField
                 fullWidth
                 label="מזהה פריט (item_id)"
@@ -252,8 +252,8 @@ export default function StoragesPage() {
                 onChange={(e) => setTransferItemId(e.target.value)}
                 placeholder="לדוגמה: 1001"
               />
-            </Grid>
-            <Grid xs={12} md={3}>
+            </Box>
+            <Box>
               <Select
                 fullWidth
                 displayEmpty
@@ -269,8 +269,8 @@ export default function StoragesPage() {
                   </MenuItem>
                 ))}
               </Select>
-            </Grid>
-            <Grid xs={12} md={3}>
+            </Box>
+            <Box>
               <Select
                 fullWidth
                 displayEmpty
@@ -286,8 +286,8 @@ export default function StoragesPage() {
                   </MenuItem>
                 ))}
               </Select>
-            </Grid>
-            <Grid xs={12} md={2}>
+            </Box>
+            <Box>
               <TextField
                 fullWidth
                 type="number"
@@ -296,8 +296,8 @@ export default function StoragesPage() {
                 value={transferAmount}
                 onChange={(e) => setTransferAmount(Number(e.target.value))}
               />
-            </Grid>
-            <Grid xs={12} md={1} display="flex" alignItems="stretch">
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
               <Button
                 fullWidth
                 variant="contained"
@@ -307,8 +307,8 @@ export default function StoragesPage() {
               >
                 העבר
               </Button>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
 
@@ -318,8 +318,8 @@ export default function StoragesPage() {
           <Typography variant="h6" gutterBottom>
             ניהול מחסנים (לוקאליים)
           </Typography>
-          <Grid container spacing={2} alignItems="center">
-            <Grid xs={12} md={8}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '8fr 4fr' }, gap: 2, alignItems: 'center' }}>
+            <Box>
               <TextField
                 fullWidth
                 label="שם מחסן חדש"
@@ -327,8 +327,8 @@ export default function StoragesPage() {
                 onChange={(e) => setNewStorageName(e.target.value)}
                 placeholder="לדוגמה: מחסן חנות דיזנגוף"
               />
-            </Grid>
-            <Grid xs={12} md={4}>
+            </Box>
+            <Box>
               <Button
                 fullWidth
                 variant="outlined"
@@ -337,8 +337,8 @@ export default function StoragesPage() {
               >
                 הוסף מחסן
               </Button>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
 

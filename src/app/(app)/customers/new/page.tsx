@@ -11,7 +11,6 @@ import {
   Alert,
   Snackbar,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { Save as SaveIcon, ArrowBack, Close } from "@mui/icons-material";
 import rivhit from "@/lib/rivhit";
 import { useRouter } from "next/navigation";
@@ -130,16 +129,16 @@ export default function NewCustomerPage() {
 
       <Card>
         <CardContent>
-          <Grid container spacing={2}>
-            <Grid xs={12} md={4}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+            <Box>
               <TextField
                 fullWidth
                 label="שם פרטי"
                 value={form.first_name}
                 onChange={(e) => setField("first_name", e.target.value)}
               />
-            </Grid>
-            <Grid xs={12} md={4}>
+            </Box>
+            <Box>
               <TextField
                 fullWidth
                 label="שם משפחה / שם עסק (חובה)"
@@ -147,8 +146,8 @@ export default function NewCustomerPage() {
                 onChange={(e) => setField("last_name", e.target.value)}
                 required
               />
-            </Grid>
-            <Grid xs={12} md={4}>
+            </Box>
+            <Box>
               <TextField
                 fullWidth
                 label="אימייל"
@@ -156,33 +155,33 @@ export default function NewCustomerPage() {
                 onChange={(e) => setField("email", e.target.value)}
                 type="email"
               />
-            </Grid>
+            </Box>
 
-            <Grid xs={12} md={4}>
+            <Box>
               <TextField
                 fullWidth
                 label="טלפון"
                 value={form.phone}
                 onChange={(e) => setField("phone", e.target.value)}
               />
-            </Grid>
-            <Grid xs={12} md={4}>
+            </Box>
+            <Box>
               <TextField
                 fullWidth
                 label="רחוב"
                 value={form.street}
                 onChange={(e) => setField("street", e.target.value)}
               />
-            </Grid>
-            <Grid xs={12} md={2}>
+            </Box>
+            <Box>
               <TextField
                 fullWidth
                 label="עיר"
                 value={form.city}
                 onChange={(e) => setField("city", e.target.value)}
               />
-            </Grid>
-            <Grid xs={12} md={2}>
+            </Box>
+            <Box>
               <TextField
                 fullWidth
                 label="מיקוד"
@@ -190,9 +189,9 @@ export default function NewCustomerPage() {
                 onChange={(e) => setField("zipcode", e.target.value)}
                 inputProps={{ inputMode: "numeric" }}
               />
-            </Grid>
+            </Box>
 
-            <Grid xs={12}>
+            <Box sx={{ gridColumn: { xs: '1 / -1', md: '1 / -1' } }}>
               <TextField
                 fullWidth
                 label="הערות"
@@ -201,8 +200,8 @@ export default function NewCustomerPage() {
                 multiline
                 rows={3}
               />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
 
