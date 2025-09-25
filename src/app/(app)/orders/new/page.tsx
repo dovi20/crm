@@ -32,6 +32,25 @@ type ItemOption = {
   sale_nis: number;
 };
 
+type CustomerData = {
+  customer_id: number;
+  first_name?: string;
+  last_name?: string;
+};
+
+type ItemData = {
+  item_id: number;
+  item_name: string;
+  item_part_num?: string;
+  sale_nis?: number;
+};
+
+type DocumentTypeData = {
+  document_type: number;
+  document_name?: string;
+  price_include_vat?: boolean;
+};
+
 const MIN_CUSTOMER_ID = 64;
 
 export default function NewOrderPage() {
@@ -74,11 +93,11 @@ export default function NewOrderPage() {
     try {
       const res = await rivhit.customers.list();
       if (res.data && res.data.data) {
-        const list = (res.data.data.customer_list || []) as any[];
+        const list = (res.data.data.customer_list || []) as CustomerData[];
         setCustomers(
           list
-            .filter((c: any) => Number(c?.customer_id ?? 0) >= MIN_CUSTOMER_ID)
-            .map((c: any) => ({
+            .filter((c: CustomerData) => Number(c?.customer_id ?? 0) >= MIN_CUSTOMER_ID)
+            .map((c: CustomerData) => ({
               id: c.customer_id,
               label: `${c.first_name || ""} ${c.last_name || ""} (#${c.customer_id})`.trim(),
             }))
@@ -101,7 +120,7 @@ export default function NewOrderPage() {
       const res = await rivhit.items.list();
       const list = res.data?.data?.item_list || [];
       setItemOptions(
-        list.map((it: any) => ({
+        list.map((it: ItemData) => ({
           id: it.item_id,
           label: `${it.item_name}${it.item_part_num ? ` (${it.item_part_num})` : ""}`,
           sale_nis: Number(it.sale_nis ?? 0),
@@ -120,13 +139,13 @@ export default function NewOrderPage() {
       const res = await rivhit.documents.types();
       const list = res.data?.data?.document_type_list || [];
       // Prefer by name (Hebrew/English), fallback to known code 10 or first
-      const byName = list.find((d: any) => {
+      const byName = list.find((d: DocumentTypeData) => {
         const name = String(d.document_name || "").toLowerCase();
         return name.includes("הזמנה") || name.includes("order");
       });
-      let doc: any = byName;
+      let doc: DocumentTypeData | undefined = byName;
       if (!doc) {
-        doc = list.find((d: any) => Number(d.document_type) === 10) || list[0];
+        doc = list.find((d: DocumentTypeData) => Number(d.document_type) === 10) || list[0];
       }
       if (doc) {
         setOrderDocType(Number(doc.document_type));
@@ -174,7 +193,7 @@ export default function NewOrderPage() {
         customer_id: selectedCustomer.id,
         price_include_vat: docPriceIncludeVat,
         items: items.map((it) => {
-          const base: any = {
+          const base: Partial<{ item_id: number; description: string; quantity: number; price_nis: number }> = {
             quantity: Number(it.quantity),
             price_nis: Number(it.price_nis),
           };
@@ -193,11 +212,12 @@ export default function NewOrderPage() {
       // reset
       setSelectedCustomer(null);
       setItems([{ description: "", quantity: 1, price_nis: 0 }]);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error creating order:", e);
+      const error = e as { response?: { data?: { client_message?: string; debug_message?: string } } };
       const msg =
-        e?.response?.data?.client_message ||
-        e?.response?.data?.debug_message ||
+        error?.response?.data?.client_message ||
+        error?.response?.data?.debug_message ||
         "שגיאה ביצירת הזמנה";
       setError(msg);
     } finally {

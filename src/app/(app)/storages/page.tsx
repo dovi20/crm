@@ -47,6 +47,11 @@ type StorageRow = {
   isLocal?: boolean;
 };
 
+type ServerStorage = {
+  storage_id: string | number;
+  storage_name: string;
+};
+
 export default function StoragesPage() {
   const [storages, setStorages] = useState<StorageRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +85,7 @@ export default function StoragesPage() {
       setError(null);
       const res = await rivhit.items.storageList();
       const list = res?.data?.data?.storage_list ?? [];
-      const serverList: StorageRow[] = list.map((s: any) => ({
+      const serverList: StorageRow[] = list.map((s: ServerStorage) => ({
         storage_id: s.storage_id,
         storage_name: s.storage_name,
         isLocal: false,
@@ -99,10 +104,10 @@ export default function StoragesPage() {
     const out: Record<string, number> = {};
     for (const st of storages) {
       const key = String(st.storage_id);
-      out[key] = inventoryStore.totalForStorage(st.storage_id as any);
+      out[key] = inventoryStore.totalForStorage(st.storage_id);
     }
     return out;
-  }, [storages, success]); // recompute after operations
+  }, [storages]); // recompute after operations
 
   const handleImportJson = async (storageId: string | number, file: File) => {
     try {
@@ -110,7 +115,7 @@ export default function StoragesPage() {
       const data = JSON.parse(text);
       inventoryStore.importForStorage(storageId, data);
       setSuccess(`ייבוא JSON בוצע בהצלחה למחסן #${storageId}`);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Failed to import JSON:", e);
       setError("ייבוא JSON נכשל - ודא מבנה תקין");
     }
@@ -135,7 +140,7 @@ export default function StoragesPage() {
       setError("הכמות להעברה חייבת להיות חיובית");
       return;
     }
-    inventoryStore.transfer(transferItemId, fromStorage as any, toStorage as any, transferAmount);
+    inventoryStore.transfer(transferItemId, fromStorage, toStorage, transferAmount);
     setSuccess(`הועבר מלאי של פריט ${transferItemId} ממחסן #${fromStorage} אל מחסן #${toStorage}`);
     setTransferAmount(0);
   };
@@ -146,8 +151,8 @@ export default function StoragesPage() {
       setNewStorageName("");
       setSuccess(`נוסף מחסן חדש: ${created.storage_name} (${created.storage_id})`);
       loadStorages();
-    } catch (e: any) {
-      setError(e?.message || "שגיאה בהוספת מחסן");
+    } catch (e: unknown) {
+      setError((e as Error)?.message || "שגיאה בהוספת מחסן");
     }
   };
 
@@ -159,13 +164,13 @@ export default function StoragesPage() {
   const saveRename = () => {
     if (editingId == null) return;
     try {
-      storageStore.rename(editingId as any, editingName);
+      storageStore.rename(editingId, editingName);
       setEditingId(null);
       setEditingName("");
       setSuccess("שם המחסן עודכן");
       loadStorages();
-    } catch (e: any) {
-      setError(e?.message || "שגיאה בעדכון שם המחסן");
+    } catch (e: unknown) {
+      setError((e as Error)?.message || "שגיאה בעדכון שם המחסן");
     }
   };
   const cancelRename = () => {
@@ -176,17 +181,17 @@ export default function StoragesPage() {
     if (!s.isLocal) return;
     if (!confirm(`למחוק את המחסן ${s.storage_name} (${s.storage_id})? פעולה זו תמחק גם את ההקצאות הלוקאליות למחסן זה.`)) return;
     try {
-      storageStore.remove(s.storage_id as any);
-      inventoryStore.clearStorage(s.storage_id as any);
+      storageStore.remove(s.storage_id);
+      inventoryStore.clearStorage(s.storage_id);
       setSuccess(`המחסן ${s.storage_name} נמחק`);
       loadStorages();
-    } catch (e: any) {
-      setError(e?.message || "שגיאה במחיקת מחסן");
+    } catch (e: unknown) {
+      setError((e as Error)?.message || "שגיאה במחיקת מחסן");
     }
   };
 
   const renderStorageDetails = (storageId: string | number) => {
-    const entries = inventoryStore.entriesForStorage(storageId as any);
+    const entries = inventoryStore.entriesForStorage(storageId);
     if (entries.length === 0) {
       return (
         <Box px={2} py={1} color="text.secondary">
@@ -257,7 +262,7 @@ export default function StoragesPage() {
                 fullWidth
                 displayEmpty
                 value={fromStorage}
-                onChange={(e) => setFromStorage(e.target.value as any)}
+                onChange={(e) => setFromStorage(e.target.value)}
               >
                 <MenuItem value="">
                   <em>מחסן מקור</em>
@@ -274,7 +279,7 @@ export default function StoragesPage() {
                 fullWidth
                 displayEmpty
                 value={toStorage}
-                onChange={(e) => setToStorage(e.target.value as any)}
+                onChange={(e) => setToStorage(e.target.value)}
               >
                 <MenuItem value="">
                   <em>מחסן יעד</em>

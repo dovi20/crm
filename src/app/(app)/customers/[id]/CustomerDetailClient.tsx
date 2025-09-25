@@ -90,7 +90,7 @@ export default function CustomerDetailClient({ id }: { id: number }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerId]);
 
-  const setField = (key: keyof CustomerForm, value: any) =>
+  const setField = (key: keyof CustomerForm, value: string | number) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
   const isArchived = useMemo(
@@ -127,11 +127,12 @@ export default function CustomerDetailClient({ id }: { id: number }) {
       };
       setForm(nextForm);
       setOriginalForm(nextForm);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error loading customer:", e);
+      const error = e as { response?: { data?: { client_message?: string; debug_message?: string } } };
       const msg =
-        e?.response?.data?.client_message ||
-        e?.response?.data?.debug_message ||
+        error?.response?.data?.client_message ||
+        error?.response?.data?.debug_message ||
         "שגיאה בטעינת פרטי לקוח";
       setError(msg);
     } finally {
@@ -176,7 +177,17 @@ export default function CustomerDetailClient({ id }: { id: number }) {
     try {
       setSaving(true);
       setError(null);
-      const payload: any = {
+      const payload: Partial<{
+        last_name: string;
+        first_name: string;
+        email: string;
+        phone: string;
+        address: string;
+        city: string;
+        zipcode: number;
+        comments: string;
+        customer_type: number;
+      }> = {
         last_name: form.last_name || form.first_name || "לקוח",
         first_name: form.first_name || "",
         email: form.email || "",
@@ -195,11 +206,12 @@ export default function CustomerDetailClient({ id }: { id: number }) {
       } else {
         setError("עדכון הלקוח לא הצליח");
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error updating customer:", e);
+      const error = e as { response?: { data?: { client_message?: string; debug_message?: string } } };
       const msg =
-        e?.response?.data?.client_message ||
-        e?.response?.data?.debug_message ||
+        error?.response?.data?.client_message ||
+        error?.response?.data?.debug_message ||
         "שגיאה בעדכון לקוח";
       setError(msg);
     } finally {
@@ -223,11 +235,12 @@ export default function CustomerDetailClient({ id }: { id: number }) {
       } else {
         setError("ארכוב הלקוח נכשל");
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error archiving customer:", e);
+      const error = e as { response?: { data?: { client_message?: string; debug_message?: string } } };
       const msg =
-        e?.response?.data?.client_message ||
-        e?.response?.data?.debug_message ||
+        error?.response?.data?.client_message ||
+        error?.response?.data?.debug_message ||
         "שגיאה בארכוב לקוח";
       setError(msg);
     } finally {
