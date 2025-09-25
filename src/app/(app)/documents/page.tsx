@@ -74,7 +74,7 @@ export default function DocumentsPage() {
     try {
       setLoading(true);
       setError(null);
-      const filters: any = { from_customer_id: MIN_CUSTOMER_ID };
+      const filters: { from_customer_id: number; from_document_type?: number; to_document_type?: number } = { from_customer_id: MIN_CUSTOMER_ID };
       if (type !== "" && type !== undefined) {
         filters.from_document_type = type;
         filters.to_document_type = type;
@@ -211,7 +211,7 @@ export default function DocumentsPage() {
                       <Chip
                         label={getTypeName(document.document_type)}
                         size="small"
-                        color={getTypeColor(document.document_type) as any}
+                        color={getTypeColor(document.document_type) as "default" | "primary" | "warning"}
                         variant="outlined"
                       />
                     </TableCell>

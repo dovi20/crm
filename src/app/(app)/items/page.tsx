@@ -124,7 +124,7 @@ export default function ItemsPage() {
     const current = inventoryStore.getAllForItem(item.item_id);
     const init: Record<number, number> = {};
     Object.entries(current).forEach(([k, v]) => {
-      init[Number(k)] = Number(v as any) || 0;
+      init[Number(k)] = Number(v) || 0;
     });
     setAllocs(init);
     setAllocItem(item);

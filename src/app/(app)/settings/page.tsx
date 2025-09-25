@@ -103,7 +103,7 @@ export default function SettingsPage() {
       } else {
         setMessage({ type: "error", text: "הסיסמה הנוכחית שגויה" });
       }
-    } catch (err) {
+    } catch {
       setMessage({ type: "error", text: "שגיאה בשינוי הסיסמה" });
     } finally {
       setLoading(false);

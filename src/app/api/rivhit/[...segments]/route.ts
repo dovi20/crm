@@ -71,12 +71,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ segment
         },
       });
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     const outErr = NextResponse.json(
       {
         error_code: -1,
         client_message: "Internal proxy error",
-        debug_message: String(err?.message ?? err),
+        debug_message: String((err as Error)?.message ?? err),
         data: {},
       },
       { status: 500 }

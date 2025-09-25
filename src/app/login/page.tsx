@@ -73,7 +73,7 @@ export default function LoginPage() {
       } else {
         setError("שם משתמש או סיסמה שגויים");
       }
-    } catch (err) {
+    } catch {
       setError("שגיאה בתהליך הכניסה");
     } finally {
       setLoading(false);

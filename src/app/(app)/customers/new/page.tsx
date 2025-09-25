@@ -33,7 +33,7 @@ export default function NewCustomerPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const setField = (key: string, value: any) => setForm((prev) => ({ ...prev, [key]: value }));
+  const setField = (key: keyof typeof initialForm, value: string | number) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
     if (!form.last_name && !form.first_name) {
@@ -45,7 +45,17 @@ export default function NewCustomerPage() {
       setError(null);
 
       // Customer.New expects 'last_name' required; we'll ensure at least last_name set
-      const payload: any = {
+      const payload: {
+        last_name: string;
+        first_name: string;
+        email: string;
+        phone: string;
+        address: string;
+        city: string;
+        zipcode?: number;
+        comments: string;
+        customer_type: number;
+      } = {
         last_name: form.last_name || form.first_name || "לקוח",
         first_name: form.first_name || "",
         email: form.email || "",
@@ -67,11 +77,12 @@ export default function NewCustomerPage() {
         // fallback: חזרה לרשימת לקוחות
         router.push("/customers");
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error creating customer:", e);
+      const error = e as { response?: { data?: { client_message?: string; debug_message?: string } } };
       const msg =
-        e?.response?.data?.client_message ||
-        e?.response?.data?.debug_message ||
+        error?.response?.data?.client_message ||
+        error?.response?.data?.debug_message ||
         "שגיאה ביצירת לקוח";
       setError(msg);
     } finally {

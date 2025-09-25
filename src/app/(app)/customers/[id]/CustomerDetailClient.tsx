@@ -395,7 +395,7 @@ export default function CustomerDetailClient({ id }: { id: number }) {
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>מס' מסמך</TableCell>
+                    <TableCell>מס&apos; מסמך</TableCell>
                     <TableCell>תאריך</TableCell>
                     <TableCell>שעה</TableCell>
                     <TableCell>סכום</TableCell>
@@ -437,7 +437,7 @@ export default function CustomerDetailClient({ id }: { id: number }) {
                 <TableHead>
                   <TableRow>
                     <TableCell>סוג</TableCell>
-                    <TableCell>מס' מסמך</TableCell>
+                    <TableCell>מס&apos; מסמך</TableCell>
                     <TableCell>תאריך</TableCell>
                     <TableCell>סכום</TableCell>
                   </TableRow>
@@ -477,7 +477,7 @@ export default function CustomerDetailClient({ id }: { id: number }) {
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>מס' קבלה</TableCell>
+                    <TableCell>מס&apos; קבלה</TableCell>
                     <TableCell>תאריך</TableCell>
                     <TableCell>שעה</TableCell>
                     <TableCell>סכום</TableCell>

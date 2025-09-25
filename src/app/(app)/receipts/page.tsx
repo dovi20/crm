@@ -72,7 +72,7 @@ export default function ReceiptsPage() {
     try {
       setLoading(true);
       setError(null);
-      const filters: any = { from_customer_id: MIN_CUSTOMER_ID };
+      const filters: { from_customer_id: number; from_receipt_type?: number; to_receipt_type?: number } = { from_customer_id: MIN_CUSTOMER_ID };
       if (type !== "" && type !== undefined) {
         filters.from_receipt_type = type;
         filters.to_receipt_type = type;
@@ -208,7 +208,7 @@ export default function ReceiptsPage() {
                       <Chip
                         label={getTypeName(receipt.receipt_type)}
                         size="small"
-                        color={getTypeColor(receipt.receipt_type) as any}
+                        color={getTypeColor(receipt.receipt_type) as "default" | "success" | "warning"}
                         variant="outlined"
                       />
                     </TableCell>

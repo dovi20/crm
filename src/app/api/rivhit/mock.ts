@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
  // Minimal mock responses aligned with Rivhit envelope for dev without token
-function ok(data: any) {
+ function ok(data: unknown) {
   const res = NextResponse.json({
     error_code: 0,
     client_message: "",
@@ -12,7 +12,7 @@ function ok(data: any) {
   return res;
 }
 
-export function mockResponse(pathSegments: string[], body: any) {
+export function mockResponse(pathSegments: string[], body: unknown) {
   const path = pathSegments.join("/");
 
   switch (path) {
@@ -165,7 +165,8 @@ export function mockResponse(pathSegments: string[], body: any) {
     }
 
     case "Document.New": {
-      const docType = Number(body?.document_type ?? 10);
+      const requestBody = body as { document_type?: number; customer_id?: number };
+      const docType = Number(requestBody?.document_type ?? 10);
       const docNumber = Math.floor(5000 + Math.random() * 5000);
       return ok({
         document_type: docType,
@@ -173,7 +174,7 @@ export function mockResponse(pathSegments: string[], body: any) {
         document_identity: "mock-doc-identity-" + docNumber,
         document_link: "https://example.com/mock-doc/" + docNumber,
         print_status: 0,
-        customer_id: Number(body?.customer_id ?? 64),
+        customer_id: Number(requestBody?.customer_id ?? 64),
       });
     }
 

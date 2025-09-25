@@ -25,14 +25,12 @@ export default function ThemeRegistry({ children }: { children: React.ReactNode 
 
   useServerInsertedHTML(() => {
     // Serialize inserted styles for server-rendered HTML
-    // @ts-ignore inserted exists at runtime
     const inserted = cache.inserted || {};
     const keys = Object.keys(inserted);
     if (keys.length === 0) return null;
 
     // Build style content
     const styles = keys
-      // @ts-ignore inserted is a record of css strings
       .map((k) => inserted[k])
       .join(" ");
 

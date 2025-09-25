@@ -61,14 +61,14 @@ export default function DashboardPage() {
       ]);
 
       const customersList = customersResponse.data?.data?.customer_list || [];
-      const customersCount = customersList.filter((c: any) => Number(c?.customer_id ?? 0) >= 64).length;
+      const customersCount = customersList.filter((c: { customer_id?: number }) => Number(c?.customer_id ?? 0) >= 64).length;
 
       const itemsList = itemsResponse.data?.data?.item_list || [];
       // סה"כ מלאי בסיכום הפריטים: סכום הכמויות, לא מספר הסוגים
-      const itemsCount = itemsList.reduce((sum: number, it: any) => sum + Number(it?.quantity ?? 0), 0);
+      const itemsCount = itemsList.reduce((sum: number, it: { quantity?: number }) => sum + Number(it?.quantity ?? 0), 0);
       const documents = documentsResponse.data?.data?.document_list || [];
       const documentsCount = documents.length;
-      const totalRevenue = documents.reduce((sum: number, doc: any) => sum + (doc?.amount || 0), 0);
+      const totalRevenue = documents.reduce((sum: number, doc: { amount?: number }) => sum + (doc?.amount || 0), 0);
 
       setStats({
         totalCustomers: customersCount,

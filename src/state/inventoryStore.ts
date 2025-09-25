@@ -44,7 +44,7 @@ function toKey(x: ItemId | StorageId) {
   return String(x);
 }
 
-function clampNonNeg(n: any) {
+function clampNonNeg(n: unknown) {
   const v = Number(n);
   return isFinite(v) && v > 0 ? v : 0;
 }
@@ -142,21 +142,22 @@ const api = {
   // Accepts:
   //  - Array<{ item_id: number|string, quantity: number }>
   //  - Record<item_id, quantity>
-  importForStorage(storageId: StorageId, data: any) {
+  importForStorage(storageId: StorageId, data: unknown) {
     if (!data) return;
     if (Array.isArray(data)) {
       for (const row of data) {
-        if (!row) continue;
-        const id = toKey(row.item_id ?? row.id);
-        const qty = clampNonNeg(row.quantity ?? row.qty);
+        if (!row || typeof row !== "object") continue;
+        const rowObj = row as Record<string, unknown>;
+        const id = toKey((rowObj.item_id as ItemId) ?? (rowObj.id as ItemId));
+        const qty = clampNonNeg(rowObj.quantity ?? rowObj.qty);
         if (!id) continue;
         api.set(id, storageId, qty);
       }
       return;
     }
-    if (typeof data === "object") {
-      for (const [id, qty] of Object.entries<any>(data)) {
-        api.set(id, storageId, clampNonNeg(qty as any));
+    if (typeof data === "object" && data !== null) {
+      for (const [id, qty] of Object.entries(data as Record<string, unknown>)) {
+        api.set(id, storageId, clampNonNeg(qty));
       }
     }
   },
