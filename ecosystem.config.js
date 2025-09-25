@@ -20,5 +20,17 @@ module.exports = {
     out_file: '/var/log/pm2/inventory-crm-out.log',
     log_file: '/var/log/pm2/inventory-crm-combined.log',
     time: true
-  }]
+  }],
+  deploy: {
+    production: {
+      user: 'root',
+      host: 'localhost',
+      ref: 'origin/main',
+      repo: 'git@github.com:YOUR_USERNAME/inventory-management.git',
+      path: '/var/www/crm',
+      'pre-deploy-local': '',
+      'post-deploy': 'npm ci --production && npm run build && pm2 restart inventory-crm',
+      'pre-setup': ''
+    }
+  }
 }
